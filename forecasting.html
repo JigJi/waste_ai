@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forecasting · Koji Insight</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div id="nav-mount"></div>
+
+<main class="container">
+
+  <!-- Lead-in -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-eyebrow">Forecasting · What we built</div>
+      <h1 class="section-title">เราทดสอบอะไร · ทำอะไรได้</h1>
+      <p class="section-subtitle">80+ external signals + 5 model variants + counterfactual simulation (re-derived 2026-05-09 ที่ proper FG-only scope, all-channel sales). <strong>Finding หลัก:</strong> AI ชนะ central kitchen บน 22 SKUs ส่งเกิน · แพ้ in-store 0/16 · ROI defendable <strong>0.5-1.2M/ปี/สาขา</strong> (shelf 1-3 วัน)</p>
+    </div>
+  </section>
+
+  <!-- Methodology -->
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">Model evolution — 4 รอบ test</h2>
+      <p class="section-subtitle">เริ่มจาก XGBoost full features → simplified rolling baseline → hybrid → external macro. <strong>Best MAPE 14.6% บน hero SKU</strong> (kj117) — แต่ MAPE ไม่ใช่ outcome ที่สำคัญ. <strong>Counterfactual $</strong> คือสิ่งที่ใช้ตัดสินใจ</p>
+    </div>
+
+    <div class="card" style="padding:0; overflow:hidden;">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>Model variant</th>
+            <th class="tbl-num">MAPE (kj117)</th>
+            <th>Verdict</th>
+            <th>Note</th>
+          </tr>
+        </thead>
+        <tbody id="models-tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-mauve mt-4">
+      <div class="callout-eyebrow">🎯 Plot twist</div>
+      <strong>Lasso เลือกแค่ 6 features จาก 80+</strong> — lag_1 (63%), roll7_mean (14%), dow (12%), is_holiday_eve (6%), lag_14 (4%), lag_7 (3%). <strong>Macro events (mourning, KPOP, mall events)</strong> ที่ใส่เข้าไป 27 features = importance รวม <5%. Reason: rare events เกิดน้อยเกินไป model จับ pattern ไม่ได้พอ
+    </div>
+  </section>
+
+  <!-- Counterfactual headline -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-eyebrow">Counterfactual proof · re-derived 2026-05-09 (proper FG-only scope, all-channel sales)</div>
+      <h2 class="section-title">AI vs Actual ตามระบบ — ผลตรงข้ามกันสุดขั้ว</h2>
+      <p class="section-subtitle">Daily simulation Oct-Dec 2025 ด้วย FIFO inventory + shelf life carryover. AI baseline = rolling-28-day × 1.10 buffer. Profit basis (revenue − COGS), ไม่ใช่ MAPE</p>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card card-tinted-rose">
+        <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:8px;">
+          <span style="font-size:32px;">🥖</span>
+          <h3 style="font-size:32px; font-weight:700; margin:0; color:var(--navy); line-height:1;">ครัวร้าน</h3>
+          <span style="font-size:13px; color:var(--slate); margin-left:auto;">In-store · 16 SKUs · Aug-Jan</span>
+        </div>
+        <div class="callout-eyebrow" style="color:#C26B5C; margin-bottom:10px;">🔴 AI แพ้ chef ทุกตัว — ห้ามแตะ</div>
+        <div class="grid grid-2 mt-3">
+          <div>
+            <div class="stat-label">Actual / 5 เดือน</div>
+            <div class="stat-num-sm">2.24<span class="stat-suffix">M</span></div>
+          </div>
+          <div>
+            <div class="stat-label">Best AI</div>
+            <div class="stat-num-sm">2.04<span class="stat-suffix">M</span></div>
+          </div>
+        </div>
+        <div class="mt-3" style="font-size:14px; color:#C26B5C; font-weight:600;">
+          AI loss: −489K/ปี · Win rate <strong>0/16 SKUs ❌</strong>
+        </div>
+        <div style="font-size:13px; color:var(--charcoal-soft); margin-top:6px;">
+          → ห้ามแตะ chef. Chef มี information ที่ encode ไม่ได้ (pre-orders, batch quality, real-time pulse, customer faces) · <em>(window: Aug-Jan 5 mo · in-store data ไม่ได้รับผล scope fix)</em>
+        </div>
+      </div>
+
+      <div class="card card-tinted-sage">
+        <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:8px;">
+          <span style="font-size:32px;">🏭</span>
+          <h3 style="font-size:32px; font-weight:700; margin:0; color:var(--navy); line-height:1;">ครัวกลาง</h3>
+          <span style="font-size:13px; color:var(--slate); margin-left:auto;">Central · 22 SKUs · Oct-Dec</span>
+        </div>
+        <div class="callout-eyebrow" style="color:#5C8A4F; margin-bottom:10px;">🟢 AI ลด over-push บน 22 SKUs ที่ส่งเกินยอดขาย</div>
+        <div class="grid grid-2 mt-3">
+          <div>
+            <div class="stat-label">AI gain @ 1-day shelf</div>
+            <div class="stat-num-sm">+1.16<span class="stat-suffix">M/ปี</span></div>
+          </div>
+          <div>
+            <div class="stat-label">AI gain @ 3-day shelf</div>
+            <div class="stat-num-sm">+0.46<span class="stat-suffix">M/ปี</span></div>
+          </div>
+        </div>
+        <div class="mt-3" style="font-size:14px; color:#5C8A4F; font-weight:600;">
+          Range: +0.5M – 1.2M/ปี (shelf 1-3 วัน · bakery typical)
+        </div>
+        <div style="font-size:13px; color:var(--charcoal-soft); margin-top:6px;">
+          → AI = central kitchen sizing บน SKUs ที่ defendable เท่านั้น · 14 SKUs อีกฝั่ง (sales > replen) <strong>ไม่ claim</strong> เพราะข้อมูลไม่ verify · Phase 0 ต้องตรวจสอบก่อน
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sensitivity -->
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">ROI sensitivity — Central Kitchen value vs shelf life</h2>
+      <p class="section-subtitle">AI ทำให้ Koji ได้กำไรเพิ่มกี่บาท/ปี · ขึ้นกับ "ของเก็บได้กี่วัน" (shelf life). <strong style="color:#5C8A4F;">เฉพาะ 22 SKUs ที่ central ส่งเกินยอดขาย</strong> (defendable ตรง ๆ) — AI ลด replen ลด waste</p>
+    </div>
+
+    <div class="card">
+      <div class="chart-wrap">
+        <canvas id="chart-sensitivity"></canvas>
+      </div>
+
+      <div class="callout callout-rose mt-4">
+        <div class="callout-eyebrow">Critical question to ask Koji owner</div>
+        <strong>"Shelf life ของแต่ละ SKU จริง ๆ คือกี่วัน?"</strong> — เปลี่ยน ROI ตั้งแต่ <strong>~0 (shelf 7-day)</strong> ถึง <strong>+1.16M (shelf 1-day)</strong>/ปี/สาขา. Bakery ทั่วไปอยู่ที่ shelf 1-3 วัน → ROI defendable range <strong>+0.5M – 1.2M/ปี</strong>
+      </div>
+
+      <div style="margin-top:12px; padding:12px 16px; background:#FBE3DC; border-left:3px solid #B08D57; border-radius:6px; font-size:13px; color:var(--charcoal-soft);">
+        <strong style="color:#B08D57;">⚠️ Remark — ไม่ได้รวม:</strong> 14 SKUs อีกฝั่งที่ data บอก "ขายเกินส่ง" (kj096/kj131/kj182/kj126/kj092 + อีก 9) — สาเหตุไม่ชัด (อาจ carryover / direct supply ไม่ logged / POS bug) → ไม่เสี่ยง claim · Phase 0 ต้อง verify ก่อน
+      </div>
+    </div>
+  </section>
+
+  <!-- 3-product architecture -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-eyebrow">Product architecture · 3 modules</div>
+      <h2 class="section-title">ที่ AI ทำได้ = 3 products คนละ user คนละ phase</h2>
+      <p class="section-subtitle">ไม่ใช่ "AI demand forecast" 1 ตัว — เป็น <strong>platform 3 modules</strong> ที่ deploy แยกตาม timing + value. ลด risk + match Koji vision (franchise expansion)</p>
+    </div>
+
+    <div class="grid grid-3" id="products-grid"></div>
+  </section>
+
+  <!-- Product 1 — Visibility audit -->
+  <section class="section">
+    <div class="callout callout-rose">
+      <div class="callout-eyebrow">⭐ Product 1 — First step คือ visibility audit ไม่ใช่ optimization</div>
+      <p style="font-size:14px; color:var(--charcoal); margin-top:6px;">
+        ก่อน AI จะแนะนำให้ central kitchen ส่งเท่าไร — Koji ต้องตอบก่อนว่า <strong>5 SKUs ที่ data บอก sales > replen (kj096/kj126/kj182/kj131/kj092) มาจากไหน?</strong> (carryover / direct supply ไม่ logged / POS bug?)
+      </p>
+      <p style="font-size:14px; color:var(--charcoal); margin-top:6px;">
+        Phase 1.0 = visibility audit (1-2 weeks): แสดง Koji ว่า data ระบบเขามี gaps อะไร, แยก measured vs inferred ทุก number, verify scope ของ replen. Phase 1.1 = AI demand recommender (10-12 weeks)
+      </p>
+    </div>
+  </section>
+
+
+  <!-- Data quality findings -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-eyebrow">Discovery phase · Data quality audit</div>
+      <h2 class="section-title">Data issues ที่เราเจอ — ที่ Koji ควรรู้ก่อน optimize</h2>
+      <p class="section-subtitle">หลังเรา audit data 11 ไฟล์ที่ Koji ส่งมา + cross-check กันทุก source · เจอ <strong>10 issues</strong> ที่ต้อง verify/fix ก่อน trust เลขใด ๆ. นี่คือเนื้อหาของ <strong>Phase 0 visibility audit</strong> · พิสูจน์ว่า Impactus เห็น issue ที่ Koji DS team ยังไม่ได้ noticed</p>
+    </div>
+
+    <div class="card" style="padding:0; overflow:hidden;">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th style="width:40px;">#</th>
+            <th>Issue ที่เจอ</th>
+            <th style="width:80px;">Severity</th>
+            <th>Implication</th>
+          </tr>
+        </thead>
+        <tbody id="data-issues-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Critical questions -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-eyebrow">Next steps · ก่อน final proposal</div>
+      <h2 class="section-title">Critical questions ต้องตอบจาก Koji owner</h2>
+      <p class="section-subtitle">19 คำถาม แบ่ง 3 หมวด: <strong>(1) Data integrity 7 ข้อ</strong> (ก่อน trust ตัวเลข) · <strong>(2) Operational 6 ข้อ</strong> (ก่อน design Phase 1) · <strong>(3) Business / Implementation 6 ข้อ</strong>. Top "Critical" 2 ข้อ (C1 under-supply source · C2 shelf life) จะ collapse ROI range เป็นตัวเลขเดียว</p>
+    </div>
+
+    <div class="card" style="padding:0; overflow:hidden;">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th style="width:40px;">#</th>
+            <th>คำถาม</th>
+            <th style="width:90px;">Impact</th>
+            <th>ทำไม</th>
+          </tr>
+        </thead>
+        <tbody id="questions-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="section">
+    <div class="card card-tinted-rose">
+      <div class="callout-eyebrow">🎯 Recommended path forward</div>
+      <h3 style="font-size:22px; font-weight:600; margin:6px 0; color:var(--charcoal);">Phase 0 (next 2-4 weeks)</h3>
+      <p style="font-size:15px; color:var(--charcoal); margin-bottom:16px;">
+        Koji owner ตอบ <strong>C1-C19</strong> (โดยเฉพาะ Critical 2 ข้อ: under-supply source + shelf life) + ตัดสินใจ scope POC + sign success-share agreement
+      </p>
+
+      <h3 style="font-size:18px; font-weight:600; margin:6px 0; color:var(--charcoal);">Phase 1.0 (1-2 weeks): Visibility audit ⭐</h3>
+      <p style="font-size:14px; color:var(--charcoal); margin-bottom:12px;">
+        Build dashboard ที่ verify scope ทุก data source · expose 5 SKUs ที่ sales > replen (kj096/kj126/kj182/kj131/kj092) — มาจากไหน? · BOM dough → Shio Pan yield · top over-push pattern. ก่อน optimize ต้อง audit ก่อน
+      </p>
+
+      <h3 style="font-size:18px; font-weight:600; margin:6px 0; color:var(--charcoal);">Phase 1.1 (8-12 weeks): Central Kitchen Sizing AI</h3>
+      <p style="font-size:14px; color:var(--charcoal); margin-bottom:12px;">
+        Build demand recommender → integrate กับ replen workflow → measure waste reduction บน 8 SKUs ที่ defendable (over-supply ratio>1) at Gaysorn → prove $ saving (target 0.5M+ Y1 · range 0.5-1.4M ขึ้นกับ shelf)
+      </p>
+
+      <h3 style="font-size:18px; font-weight:600; margin:6px 0; color:var(--charcoal);">Phase 2 (6+ months)</h3>
+      <p style="font-size:14px; color:var(--charcoal);">
+        Add In-store Advisor (stockout + erosion alerts บน LINE/email) + Cold-start Engine (เปิดใช้งานเมื่อ SeaconB เปิด ก.พ. 2026 หรือ launch SKU ใหม่)
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<div id="footer-mount"></div>
+
+<script src="data.js"></script>
+<script src="partials.js"></script>
+<script>
+renderNav('forecasting');
+renderFooter();
+
+const D = window.KOJI_DATA;
+const F = window.fmt;
+const T = window.THEME;
+
+Chart.defaults.font.family = 'Noto Sans Thai, Inter, sans-serif';
+Chart.defaults.color = '#6B6275';
+Chart.defaults.borderColor = '#F0E6D8';
+
+// Models table
+(function() {
+  document.getElementById('models-tbody').innerHTML = D.models.map(m => {
+    const verdictPill = m.mape_hero <= 15 ? '<span class="pill pill-sage">' + m.verdict + '</span>'
+                       : m.mape_hero <= 25 ? '<span class="pill pill-mauve">' + m.verdict + '</span>'
+                       : '<span class="pill pill-peach">' + m.verdict + '</span>';
+    return `<tr>
+      <td><strong>${m.name}</strong></td>
+      <td class="tbl-num"><strong style="font-size:18px;">${m.mape_hero}%</strong></td>
+      <td>${verdictPill}</td>
+      <td style="font-size:13px; color:var(--charcoal-soft);">${m.note}</td>
+    </tr>`;
+  }).join('');
+})();
+
+// Sensitivity chart — single bar: AI ลด over-push บน 22 SKUs (defendable only)
+(function() {
+  const ctx = document.getElementById('chart-sensitivity').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: D.sensitivity.map(d => d.shelf),
+      datasets: [
+        { label: 'AI gain (THB/ปี/สาขา) — 22 SKUs ส่งเกินยอดขาย', data: D.sensitivity.map(d => d.defendable), backgroundColor: T.sage, borderRadius: 6 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', align: 'center', labels: { boxWidth: 14, padding: 14, font: { size: 12 } } },
+        tooltip: {
+          backgroundColor: '#3D3744',
+          callbacks: { label: ctx => F.thbShort(ctx.raw) + ' ฿/ปี' }
+        }
+      },
+      scales: {
+        y: { beginAtZero: true, ticks: { callback: v => F.thbShort(v), font: { size: 11 } }, grid: { color: '#F0E6D8' }, title: { display: true, text: 'AI gain annualized (THB / สาขา)', font: { size: 12 } } },
+        x: { grid: { display: false }, ticks: { font: { size: 11 } }, title: { display: true, text: 'Shelf life assumption', font: { size: 11 } } }
+      }
+    }
+  });
+})();
+
+// 3 Products grid
+(function() {
+  document.getElementById('products-grid').innerHTML = D.products.map(p => {
+    const tierClass = p.tier === 'priority' ? 'card-tinted-rose' : p.tier === 'value' ? 'card-tinted-mauve' : 'card-tinted-sage';
+    return `
+      <div class="card ${tierClass}" style="height:100%;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+          <div class="brand-mark" style="background:linear-gradient(135deg, var(--rose), var(--peach)); width:32px; height:32px;">${p.letter}</div>
+          <div class="callout-eyebrow" style="margin:0;">${p.phase}</div>
+        </div>
+        <h3 style="font-size:18px; font-weight:600; margin-bottom:10px; color:var(--charcoal);">${p.name}</h3>
+        <div style="font-size:13px; color:var(--charcoal); margin-bottom:8px;">
+          <strong>Target:</strong> ${p.target}
+        </div>
+        <div style="font-size:13px; color:var(--charcoal); margin-bottom:8px;">
+          <strong>Method:</strong> ${p.method}
+        </div>
+        <div style="font-size:13px; color:var(--charcoal); margin-bottom:8px; font-style:italic; padding:8px; background:rgba(255,255,255,0.5); border-radius:8px;">
+          ${p.output}
+        </div>
+        <div style="font-size:12px; color:var(--charcoal-soft); border-top:1px solid var(--line); padding-top:10px; margin-top:10px;">
+          <div><strong>👤 User:</strong> ${p.user}</div>
+          <div><strong>⏱ Frequency:</strong> ${p.frequency}</div>
+          <div style="margin-top:6px; color:var(--rose-deep); font-weight:600;">${p.proof}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+})();
+
+
+// Critical questions
+(function() {
+  const impactPill = (i) => i === 'Critical' ? '<span class="pill pill-peach">Critical</span>'
+                          : i === 'High' ? '<span class="pill pill-rose">High</span>'
+                          : '<span class="pill pill-mauve">Medium</span>';
+  document.getElementById('questions-tbody').innerHTML = D.critical_questions.map(q => `
+    <tr>
+      <td><strong>${q.id}</strong></td>
+      <td><strong>${q.q}</strong></td>
+      <td>${impactPill(q.impact)}</td>
+      <td style="font-size:13px; color:var(--charcoal-soft);">${q.why}</td>
+    </tr>
+  `).join('');
+})();
+
+// Data quality findings
+(function() {
+  const sevPill = (s) => s === 'Critical' ? '<span class="pill pill-peach">🔴 Critical</span>'
+                       : s === 'High'     ? '<span class="pill pill-rose">🟠 High</span>'
+                       :                    '<span class="pill pill-mauve">🟡 Medium</span>';
+  const tbody = document.getElementById('data-issues-tbody');
+  if (!tbody) return;
+  tbody.innerHTML = D.data_issues.map(d => `
+    <tr>
+      <td><strong>${d.id}</strong></td>
+      <td><strong>${d.issue}</strong></td>
+      <td>${sevPill(d.severity)}</td>
+      <td style="font-size:13px; color:var(--charcoal-soft);">${d.implication}</td>
+    </tr>
+  `).join('');
+})();
+</script>
+</body>
+</html>

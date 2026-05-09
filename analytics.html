@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analytics · Koji Insight</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div id="nav-mount"></div>
+
+<main class="container">
+
+  <!-- Lead-in -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-eyebrow">Analytics · What we found</div>
+      <h1 class="section-title">เจออะไรในข้อมูลของ Koji</h1>
+      <p class="section-subtitle"><strong>5 strategic discoveries</strong> ที่ change pitch story ทั้งหมด — แต่ละข้อ verified จาก data จริง (POS, traffic camera, replen, waste log, booth POS)</p>
+    </div>
+
+    <div class="grid grid-3 mt-4">
+      <div class="card card-tinted-peach">
+        <div class="callout-eyebrow">Discovery #1</div>
+        <h3 style="font-size:15px; font-weight:600; margin:6px 0; color:var(--charcoal);">Sales drop -55% มี macro reason</h3>
+        <p style="font-size:12px; color:var(--charcoal-soft);">5-shock stack Q3-Q4 2025 · peak Mar→Jan</p>
+      </div>
+      <div class="card card-tinted-cream">
+        <div class="callout-eyebrow">Discovery #2</div>
+        <h3 style="font-size:15px; font-weight:600; margin:6px 0; color:var(--charcoal);">UV → tx elasticity = +0.5</h3>
+        <p style="font-size:12px; color:var(--charcoal-soft);">+1 UV ≈ +70 ฿ · entry rate ≠ predictor</p>
+      </div>
+      <div class="card card-tinted-rose">
+        <div class="callout-eyebrow">Discovery #3</div>
+        <h3 style="font-size:15px; font-weight:600; margin:6px 0; color:var(--charcoal);">Koji มี 2 production systems</h3>
+        <p style="font-size:12px; color:var(--charcoal-soft);">In-store (chef) vs central kitchen (planner)</p>
+      </div>
+      <div class="card card-tinted-mauve">
+        <div class="callout-eyebrow">Discovery #4</div>
+        <h3 style="font-size:15px; font-weight:600; margin:6px 0; color:var(--charcoal);">kj091 ขายได้ 65% ของที่ส่ง</h3>
+        <p style="font-size:12px; color:var(--charcoal-soft);">Gay 22% · booth 39% · Grab 4% · 33% หายจริง · Oct-Jan</p>
+      </div>
+      <div class="card card-tinted-cream">
+        <div class="callout-eyebrow">Discovery #5</div>
+        <h3 style="font-size:15px; font-weight:600; margin:6px 0; color:var(--charcoal);">ครัวร้าน = 78% ของ unit · ไม่มี log</h3>
+        <p style="font-size:12px; color:var(--charcoal-soft);">~45 SKUs ผลิตในร้าน — Phase 0 ต้องสร้าง log ก่อน</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Discovery #1: Macro shock -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-eyebrow">Discovery #1 · Sales drop explained</div>
+      <h2 class="section-title">Macro events stack Q3-Q4 2025 → ยอดขาย -49%</h2>
+      <p class="section-subtitle">Aug peak 1.32M → Jan 670K = <strong>-49% ใน 5 เดือน</strong>. 12 events verified (Bangkok Post · Bloomberg · UTCC · NESDC · TAT) — top-5 ที่แข็งสุด: <strong>CCI 32-month low + GDP Q3 -0.6% QoQ + แต่งดำ 90 วัน + Chinese tourist -33% + บาทแข็ง 9.4%</strong></p>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <h3 style="font-size:15px; font-weight:600; margin-bottom:12px;">Macro events timeline</h3>
+        <div class="timeline" id="timeline-events"></div>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size:15px; font-weight:600; margin-bottom:12px;">คนเข้าร้านลด → ยอดขายลดตามกัน</h3>
+        <div class="chart-wrap-short">
+          <canvas id="chart-uv"></canvas>
+        </div>
+        <div class="callout callout-sage mt-4">
+          <div class="callout-eyebrow">Insight</div>
+          UV และ tx เคลื่อนทิศเดียวกัน → <strong>ปัญหาคือคนเดินผ่านน้อยลง (macro)</strong> ไม่ใช่ของในร้านมีปัญหา (conversion stable ที่ ~70% — ดู Discovery #2)
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Discovery #2: UV elasticity — beyond waste -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-eyebrow">Discovery #2 · Customer funnel</div>
+      <h2 class="section-title">คนเดินผ่าน → เข้าร้าน → ซื้อ — Koji แข็งที่ขั้น "เข้าแล้วซื้อ"</h2>
+      <p class="section-subtitle">verified จาก <strong>224 วัน</strong> (มิ.ย. 2025 – ม.ค. 2026). ทุกขั้น measure ได้จริง (camera + POS) — รู้ว่าจุดไหน Koji ทำดี / จุดไหนยังเปิดได้</p>
+    </div>
+
+    <div class="grid grid-3 mb-6">
+      <div class="stat-card">
+        <div class="stat-label">1. คนเดินผ่านหน้าร้าน</div>
+        <div class="stat-num">~5,800<span class="stat-suffix">/วัน</span></div>
+        <div class="stat-foot">mean 229 วัน · Q4 ลดเหลือ ~5,500 — Koji ควบคุมไม่ได้ (macro)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">2. ของคนเดินผ่าน → เข้าร้าน</div>
+        <div class="stat-num">~7<span class="stat-suffix">%</span></div>
+        <div class="stat-foot">~300 คน/วัน — controllable (window/signage/promo)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">3. ของคนเข้า → ซื้อ</div>
+        <div class="stat-num">~70<span class="stat-suffix">%</span></div>
+        <div class="stat-foot">~226 คน/วัน · 141 ฿/บิล — Koji แข็ง (retail ปกติ 20-40%)</div>
+      </div>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <h3 style="font-size:15px; font-weight:600; margin-bottom:4px;">Scatter — UV vs tx (120 days sample)</h3>
+        <p style="font-size:12px; color:var(--slate); margin-bottom:8px;">Pearson r = 0.77 · R² = 60% — UV เป็น predictor ที่แม่นพอ</p>
+        <div class="chart-wrap">
+          <canvas id="chart-uv-scatter"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size:15px; font-weight:600; margin-bottom:12px;">Monthly conversion — เสถียรแม้ UV ตก</h3>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>เดือน</th>
+              <th class="tbl-num">UV/วัน</th>
+              <th class="tbl-num">tx/วัน</th>
+              <th class="tbl-num">conv</th>
+              <th class="tbl-num">basket ฿</th>
+            </tr>
+          </thead>
+          <tbody id="uv-monthly-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Discovery #3: 2 Production systems -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-eyebrow">Discovery #3 · ระบบการผลิต</div>
+      <h2 class="section-title">Koji มีระบบการผลิตสินค้าแบ่งออกเป็น 2 ส่วน</h2>
+      <p class="section-subtitle">แต่ละระบบใช้เครื่องมือคนละแบบ — ระบบในร้าน chef ตัดสินใจดีอยู่แล้ว, ระบบครัวกลาง AI ช่วยได้จริง</p>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="split-card system-a">
+        <div class="split-card-eyebrow">🟢 ระบบที่ 1 · ผลิตในร้าน</div>
+        <h3 class="split-card-title">In-store baking — ปรับเร็วได้รายวัน</h3>
+        <ul class="split-card-list">
+          <li><strong>~45 SKUs:</strong> Shio Pan family (kj117 Signature, kj159 Red Bean, kj118 Brulee, kj151 Bacon, kj120 Egg Salad, kj124 Tuna, …), Miso Cruffin, Tuna Melt, Coconut Cruffin, ...</li>
+          <li><strong>คนตัดสินใจ:</strong> ในร้าน (manager/supervisor หรือ chef — ขึ้นกับ org structure ของ Koji)</li>
+          <li><strong>ปรับ qty:</strong> 2-3 รอบ/วัน (09:30 / 11:00 / 14:00) — เห็นยอดขายแล้วปรับรอบถัดไปได้</li>
+          <li><strong>ข้อมูลที่ใช้:</strong> pre-orders + คุณภาพ batch + ลูกค้าหน้าร้าน + อุณหภูมิ</li>
+          <li><strong>Replen FG จาก central:</strong> 0 records สำหรับ Top 9 Shio Pans (kj117 215K units sold = no replen) ✓ confirmed</li>
+        </ul>
+        <div class="verdict-bar verdict-loss">
+          🟡 AI = second opinion เฉพาะวันพิเศษ — รายวันให้คนในร้านตัดสินใจตามเดิม, AI alert ตอนมี signal ชัด (วันฝนตก, holiday, event, หลังข่าวใหญ่)
+        </div>
+      </div>
+
+      <div class="split-card system-b">
+        <div class="split-card-eyebrow">🔴 ระบบที่ 2 · ส่งจากครัวกลาง</div>
+        <h3 class="split-card-title">Central kitchen delivery — ปรับไม่ทัน demand</h3>
+        <ul class="split-card-list">
+          <li><strong>52 SKUs (FG-only):</strong> Grilled Honey Butter, Croissant, Cheese, Pudding, Table Roll, Pain au Choc, Sourdough, Muffin, Danish, etc.</li>
+          <li><strong>คนตัดสินใจ:</strong> Central kitchen planner (ห่างจากร้าน, ไม่เห็น sales real-time)</li>
+          <li><strong>Replen:</strong> 1,221 ครั้งเข้า Amarin (ส่ง 09:30 + 14:00) · 19,531 units ใน 3 เดือน Oct-Dec</li>
+          <li><strong style="color:var(--danger);">SKU-level imbalance ทั้ง 2 ทิศ (ดูกราฟล่าง):</strong> 22 SKUs ส่งเกินยอดขาย (ratio 1.0–3.0x) — defendable, AI ลดได้ · 14 SKUs Sales > Replen (ratio 0–0.7x) — ของมาจากแหล่งอื่น → ต้องถาม Koji ก่อน claim</li>
+          <li><strong>ในร้านทำได้แค่:</strong> รับมาแล้วทิ้งไม่ได้ ขายไม่ได้ก็เสีย</li>
+        </ul>
+        <div class="verdict-bar verdict-win">
+          ✅ AI ช่วยได้จริง — ลด over-push บน 22 SKUs ที่ ratio>1 (defendable per-SKU) · <strong style="opacity:0.7;">ROI ตัวเลขรอ re-derive ที่ proper scope</strong>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Discovery #4: kj091 smoking gun -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-eyebrow">Discovery #4 · ตัวอย่างปัญหาจริง</div>
+      <h2 class="section-title">kj091 Grilled Honey Butter — ขายได้ 65% ของที่ส่ง · เหลือ 35%</h2>
+      <p class="section-subtitle">เลือก SKU เดียวมาดูใกล้ๆ. <strong>4 เดือนล่าสุด (Oct-Jan, replen file ครบแล้ว)</strong>: ครัวกลางส่ง 4,439 ลูก → Gaysorn 969 + booth 1,712 + Grab 193 + waste log 120 + ที่หายจริง 1,445 ลูก (33%)</p>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <h3 style="font-size:15px; font-weight:600; margin-bottom:12px;">Replen vs Sales รายเดือน — kj091</h3>
+        <div class="chart-wrap-tall">
+          <canvas id="chart-kj091"></canvas>
+        </div>
+        <p style="font-size:11px; color:var(--slate); margin-top:8px; font-style:italic;">* Sep replen file เพิ่งเริ่มเก็บกลาง Aug → Sep undercount → เน้นสรุปเฉพาะ Oct-Jan. ตัวเลขจาก data ที่มี รอ Koji ยืนยันก่อน implement</p>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size:15px; font-weight:600; margin-bottom:12px;">Implied waste % per month</h3>
+        <table class="tbl mt-2">
+          <thead>
+            <tr>
+              <th>เดือน</th>
+              <th class="tbl-num">Replen</th>
+              <th class="tbl-num">Sales (Gay+Booth+Grab)</th>
+              <th class="tbl-num">Balance %</th>
+            </tr>
+          </thead>
+          <tbody id="kj091-tbody"></tbody>
+        </table>
+        <div class="callout callout-peach mt-4">
+          <div class="callout-eyebrow">4-month total (Oct-Jan, replen file ครบ)</div>
+          <div style="font-size:16px; font-weight:600; color:var(--charcoal); line-height:1.5;">
+            Replen 4,439 · Gay 969 + <strong>booth 1,712</strong> + Grab 193 = ขายจริง 2,874 (65%)<br>
+            Waste log 120 · <span style="color:#C26B5C;">ยัง unaccounted 1,445 ลูก (33%)</span>
+          </div>
+          <div style="font-size:12px; color:var(--charcoal-soft); margin-top:8px; line-height:1.5;">
+            ขายได้ <strong>65% ของที่ส่ง</strong> — Gay 22%, booth 39%, Grab 4%, waste log 3%. <strong>Issue หลัก = data fragmented 5 systems</strong> (POS Gay + 3 POS booth + Grab + waste log)
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Over-push pattern -->
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">Replen vs Sales pattern — ครัวกลาง 52 SKUs</h2>
+      <p class="section-subtitle">Oct-Dec 2025 · ratio = Replen ÷ Sales (Gay+Booth+Grab). <strong>22 SKUs ส่งเกิน</strong> (ซ้าย) + <strong>14 SKUs ขายเกิน</strong> (ขวา) = <strong>36 SKUs imbalance</strong> · อีก 3 SKUs ขายไม่ได้เลย (kj149/kj197/kj198 = seasonal) · 13 SKUs inactive (ไม่มี movement ใน window นี้) → 22+14+3+13 = 52 ✓</p>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:8px;">
+          <h3 style="font-size:14px; font-weight:700; color:var(--navy);">⬅️ ส่งเกินยอดขาย (22 SKUs)</h3>
+          <span style="font-size:11px; color:var(--slate);">ratio ≥ 1</span>
+        </div>
+        <div style="position:relative; height:680px; margin-top:8px;">
+          <canvas id="chart-over"></canvas>
+        </div>
+        <div class="callout callout-peach mt-3" style="font-size:12px;">
+          <strong style="color:var(--charcoal);">defendable ตรงๆ</strong> — central ส่งมากกว่ายอดขายจริง · top: kj194 3.0x · kj192 2.1x · kj200 1.9x · kj091 1.6x. AI value = ลด over-push บนกลุ่มนี้
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:8px;">
+          <h3 style="font-size:14px; font-weight:700; color:var(--navy);">➡️ ขายเกินส่ง (14 SKUs)</h3>
+          <span style="font-size:11px; color:var(--slate);">ratio &lt; 1</span>
+        </div>
+        <div style="position:relative; height:680px; margin-top:8px;">
+          <canvas id="chart-under"></canvas>
+        </div>
+        <div class="callout callout-mauve mt-3" style="font-size:12px;">
+          <strong style="color:var(--charcoal);">ต้องถาม Koji ก่อน claim</strong> — sales > replen → ของจากแหล่งอื่น (carryover / direct supply ไม่ logged / POS bug) · ⚠️ <strong>3 SKUs ratio = 0</strong> (kj199, kj185, kj166 = ขายได้แต่ไม่มี replen เลย) + kj164/kj126/kj182 ratio < 0.12 = suspect ที่สุด
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Discovery #5: Data flow visual -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-eyebrow">Discovery #5 · การไหลของข้อมูล</div>
+      <h2 class="section-title">2 ครัวคนละ flow — ครัวกลางมี log ครบ · ครัวร้านขาด step "ผลิต"</h2>
+      <p class="section-subtitle">แยก scope ตาม source ของ SKU เพื่อหลีกเลี่ยง mismatch. <strong>ครัวกลาง 52 SKUs (มี replen log)</strong> vs <strong>ครัวร้าน ~45 SKUs (ไม่มี production log ❓)</strong>. ครัวร้านขาย <strong>~78% ของ unit ทั้งหมด</strong> แต่ optimize ไม่ได้เพราะไม่มี production data → Phase 0 = สร้าง log นี้ก่อน</p>
+      <div style="margin-top:14px;">
+        <label style="font-size:12px; font-weight:600; color:var(--slate); margin-right:8px;">เลือกช่วงเวลา:</label>
+        <select id="flow-period" style="padding:6px 12px; font-size:13px; border:1px solid var(--line); border-radius:4px; background:var(--pearl); color:var(--navy); font-family:inherit; cursor:pointer;">
+          <option value="all3">รวม Oct'25 – Dec'25</option>
+          <option value="2025-10">Oct'25</option>
+          <option value="2025-11">Nov'25</option>
+          <option value="2025-12" selected>Dec'25</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Flow A: ครัวกลาง -->
+    <div class="card" style="padding:24px 20px; margin-bottom:16px;">
+      <div style="font-size:13px; font-weight:700; color:var(--navy); margin-bottom:4px;">🏭 Flow A · ครัวกลาง — 52 SKUs (Croissant, Pain au Choc, Pudding, Cheese, Honey Butter, …)</div>
+      <div style="font-size:11px; color:var(--slate); margin-bottom:18px;">Replen log ครบ → ดูได้ทุก step</div>
+
+      <div class="data-flow">
+        <!-- 1. ผลิต -->
+        <div class="flow-col">
+          <div class="flow-col-label">1. ผลิต</div>
+          <div class="flow-box flow-ok" data-flow-col="cA">
+            <div class="flow-box-stat"><span data-flow-stat="central_replen">7,512</span><span class="flow-box-stat-unit">units</span></div>
+            <div class="flow-box-icon">🏭</div>
+            <div class="flow-box-title">Central Kitchen</div>
+            <div class="flow-box-meta">FG-only · ส่ง Amarin · 09:30 + 14:00 ทุกวัน</div>
+          </div>
+        </div>
+
+        <!-- 2. ขาย -->
+        <div class="flow-col">
+          <div class="flow-col-label">2. ขาย</div>
+          <div class="flow-box flow-ok" data-flow-col="cA">
+            <div class="flow-box-stat"><span data-flow-stat="c_gay">4,564</span><span class="flow-box-stat-unit">units</span></div>
+            <div class="flow-box-icon">💰</div>
+            <div class="flow-box-title">POS Gaysorn</div>
+            <div class="flow-box-meta"><span data-flow-stat="c_gay_bills">2,581</span> บิล</div>
+          </div>
+          <div class="flow-box flow-ok" data-flow-col="cA">
+            <div class="flow-box-stat"><span data-flow-stat="c_booth">4,027</span><span class="flow-box-stat-unit">units</span></div>
+            <div class="flow-box-icon">🛒</div>
+            <div class="flow-box-title">POS Booth × 3</div>
+            <div class="flow-box-meta"><span data-flow-stat="c_booth_bills">2,982</span> บิล</div>
+          </div>
+          <div class="flow-box flow-ok" data-flow-col="cA">
+            <div class="flow-box-stat"><span data-flow-stat="c_grab">397</span><span class="flow-box-stat-unit">units</span></div>
+            <div class="flow-box-icon">🛵</div>
+            <div class="flow-box-title">Grab delivery</div>
+            <div class="flow-box-meta"><span data-flow-stat="c_grab_tx">231</span> tx</div>
+          </div>
+        </div>
+
+        <!-- 3. เหลือ -->
+        <div class="flow-col">
+          <div class="flow-col-label">3. เหลือ (waste)</div>
+          <div class="flow-box flow-warn" data-flow-col="cA">
+            <div class="flow-box-stat"><span data-flow-stat="c_waste">796</span><span class="flow-box-stat-unit">units</span></div>
+            <div class="flow-box-icon">🗑️</div>
+            <div class="flow-box-title">Waste log (central items)</div>
+            <div class="flow-box-meta">manual + Odoo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flow B: ครัวร้าน -->
+    <div class="card" style="padding:24px 20px;">
+      <div style="font-size:13px; font-weight:700; color:var(--navy); margin-bottom:4px;">🥖 Flow B · ครัวร้าน — ~45 SKUs (Shio Pan family + Cruffin + Tuna Melt + …)</div>
+      <div style="font-size:11px; color:var(--slate); margin-bottom:18px;"><strong style="color:var(--danger);">ไม่มี production log</strong> → step "ผลิต" คือ ❓ · ขาย/waste ดูได้</div>
+
+      <div class="data-flow">
+        <!-- 1. ผลิต -->
+        <div class="flow-col">
+          <div class="flow-col-label">1. ผลิต</div>
+          <div class="flow-box flow-bad" data-flow-col="cB">
+            <div class="flow-box-stat"><span style="color:var(--danger); font-size:24px;">❓</span><span class="flow-box-stat-unit">ไม่ทราบ</span></div>
+            <div class="flow-box-icon">🥖</div>
+            <div class="flow-box-title">ครัวร้าน (in-store baking)</div>
+            <div class="flow-box-meta"><strong style="color:var(--danger);">ไม่มี production log</strong> · Phase 0 ของ Koji Insight = สร้าง log นี้ก่อน</div>
+          </div>
+        </div>
+
+        <!-- 2. ขาย -->
+        <div class="flow-col">
+          <div class="flow-col-label">2. ขาย</div>
+          <div class="flow-box flow-ok" data-flow-col="cB">
+            <div class="flow-box-stat"><span data-flow-stat="i_gay">9,518</span><span class="flow-box-stat-unit">units</span></div>
+            <div class="flow-box-icon">💰</div>
+            <div class="flow-box-title">POS Gaysorn</div>
+            <div class="flow-box-meta"><span data-flow-stat="i_gay_bills">3,896</span> บิล</div>
+          </div>
+          <div class="flow-box flow-ok" data-flow-col="cB">
+            <div class="flow-box-stat"><span data-flow-stat="i_booth">15,784</span><span class="flow-box-stat-unit">units</span></div>
+            <div class="flow-box-icon">🛒</div>
+            <div class="flow-box-title">POS Booth × 3</div>
+            <div class="flow-box-meta"><span data-flow-stat="i_booth_bills">7,688</span> บิล</div>
+          </div>
+          <div class="flow-box flow-ok" data-flow-col="cB">
+            <div class="flow-box-stat"><span data-flow-stat="i_grab">1,827</span><span class="flow-box-stat-unit">units</span></div>
+            <div class="flow-box-icon">🛵</div>
+            <div class="flow-box-title">Grab delivery</div>
+            <div class="flow-box-meta"><span data-flow-stat="i_grab_tx">247</span> tx</div>
+          </div>
+        </div>
+
+        <!-- 3. เหลือ -->
+        <div class="flow-col">
+          <div class="flow-col-label">3. เหลือ (waste)</div>
+          <div class="flow-box flow-warn" data-flow-col="cB">
+            <div class="flow-box-stat"><span data-flow-stat="i_waste">871</span><span class="flow-box-stat-unit">units</span></div>
+            <div class="flow-box-icon">🗑️</div>
+            <div class="flow-box-title">Waste log (in-store SKUs)</div>
+            <div class="flow-box-meta">manual + Odoo · capture rate verify ไม่ได้ (no production log)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div id="footer-mount"></div>
+
+<script src="data.js"></script>
+<script src="partials.js"></script>
+<script>
+renderNav('analytics');
+renderFooter();
+
+const D = window.KOJI_DATA;
+const F = window.fmt;
+const T = window.THEME;
+
+Chart.defaults.font.family = 'Noto Sans Thai, Inter, sans-serif';
+Chart.defaults.color = '#6B6275';
+Chart.defaults.borderColor = '#F0E6D8';
+
+// Timeline
+(function() {
+  const div = document.getElementById('timeline-events');
+  div.innerHTML = D.shocks.map(s => `
+    <div class="timeline-event">
+      <div class="timeline-date">${s.date}</div>
+      <div class="timeline-marker ${s.kind}"></div>
+      <div class="timeline-content">${s.text}</div>
+    </div>
+  `).join('');
+})();
+
+// UV + tx — monotone trend (both decline together)
+(function() {
+  const ctx = document.getElementById('chart-uv').getContext('2d');
+  new Chart(ctx, {
+    data: {
+      labels: D.uv_conversion.map(d => d.ym),
+      datasets: [
+        { type: 'bar',  label: 'UV/วัน (คนเข้าร้าน)', data: D.uv_conversion.map(d => d.uv), backgroundColor: 'rgba(45, 106, 79, 0.55)', borderRadius: 4, yAxisID: 'y' },
+        { type: 'line', label: 'Tx/วัน (ยอดขาย)',     data: D.uv_conversion.map(d => d.tx), borderColor: '#B08D57', backgroundColor: '#B08D57', tension: 0.2, pointRadius: 4, pointBorderWidth: 2, yAxisID: 'y' },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top', align: 'start', labels: { boxWidth: 12, padding: 12, font: { size: 11 } } },
+        tooltip: { backgroundColor: '#0B1F3A' }
+      },
+      scales: {
+        y: { beginAtZero: true, ticks: { font: { size: 10 } }, grid: { color: '#EEF1F6' }, title: { display: true, text: 'per day', font: { size: 10, weight: 600 } } },
+        x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+      }
+    }
+  });
+})();
+
+// UV scatter + regression line
+(function() {
+  const ctx = document.getElementById('chart-uv-scatter').getContext('2d');
+  const fit = D.uv_fit;
+
+  // Build regression line endpoints
+  const uvs = D.uv_scatter.map(p => p.uv);
+  const xMin = Math.min(...uvs);
+  const xMax = Math.max(...uvs);
+  const regLine = [
+    { x: xMin, y: fit.slope_tx_per_uv * xMin + fit.intercept },
+    { x: xMax, y: fit.slope_tx_per_uv * xMax + fit.intercept },
+  ];
+
+  new Chart(ctx, {
+    data: {
+      datasets: [
+        {
+          type: 'scatter',
+          label: 'Daily (UV, tx)',
+          data: D.uv_scatter.map(p => ({ x: p.uv, y: p.tx })),
+          backgroundColor: 'rgba(176, 141, 87, 0.55)',
+          borderColor: 'rgba(176, 141, 87, 0.9)',
+          pointRadius: 4,
+          pointHoverRadius: 6,
+        },
+        {
+          type: 'line',
+          label: `Fit · slope ${fit.slope_tx_per_uv} · R² ${fit.r_squared.toFixed(2)}`,
+          data: regLine,
+          borderColor: T.charcoal,
+          borderWidth: 2,
+          borderDash: [6, 4],
+          pointRadius: 0,
+          fill: false,
+          tension: 0,
+        },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top', align: 'end', labels: { boxWidth: 12, font: { size: 11 } } },
+        tooltip: {
+          backgroundColor: '#0B1F3A',
+          callbacks: {
+            label: c => c.datasetIndex === 0
+              ? `UV ${c.parsed.x} → tx ${c.parsed.y}`
+              : `Fit: tx = ${fit.slope_tx_per_uv} × UV + ${fit.intercept}`
+          }
+        }
+      },
+      scales: {
+        x: { type: 'linear', title: { display: true, text: 'Daily UV (camera)', font: { size: 11, weight: 600 } }, grid: { color: '#EEF1F6' }, ticks: { font: { size: 10 } } },
+        y: { beginAtZero: true, title: { display: true, text: 'Daily transactions (POS)', font: { size: 11, weight: 600 } }, grid: { color: '#EEF1F6' }, ticks: { font: { size: 10 } } }
+      }
+    }
+  });
+})();
+
+// UV monthly conversion table
+(function() {
+  const tbody = document.getElementById('uv-monthly-tbody');
+  const max_uv = Math.max(...D.uv_conversion.map(d => d.uv));
+  tbody.innerHTML = D.uv_conversion.map(d => {
+    const convPct = (d.conv * 100).toFixed(0) + '%';
+    const convStyle = d.conv >= 0.78 ? 'color:var(--success);font-weight:700;' :
+                      d.conv <= 0.65 ? 'color:var(--danger);font-weight:700;' : '';
+    return `<tr>
+      <td style="font-size:13px;">${d.ym}</td>
+      <td class="tbl-num">${d.uv}</td>
+      <td class="tbl-num">${d.tx}</td>
+      <td class="tbl-num" style="${convStyle}">${convPct}</td>
+      <td class="tbl-num">${d.basket || '-'}</td>
+    </tr>`;
+  }).join('');
+  // Add basket column from monthly conversion (re-read from data.js for basket field)
+})();
+
+// kj091 chart — Replen vs (Gay + booth) stacked + waste
+(function() {
+  const ctx = document.getElementById('chart-kj091').getContext('2d');
+  new Chart(ctx, {
+    data: {
+      labels: D.kj091_monthly.map(d => d.ym),
+      datasets: [
+        { type: 'bar', label: 'Replen (ส่งเข้า)', data: D.kj091_monthly.map(d => d.replen),     backgroundColor: 'rgba(176, 141, 87, 0.85)', borderRadius: 4, stack: 'a' },
+        { type: 'bar', label: 'Gaysorn sales',    data: D.kj091_monthly.map(d => d.sales_gay),  backgroundColor: 'rgba(45, 106, 79, 0.85)', borderRadius: 0, stack: 'b' },
+        { type: 'bar', label: 'Booth sales',      data: D.kj091_monthly.map(d => d.sales_booth),backgroundColor: 'rgba(45, 106, 79, 0.55)', borderRadius: 0, stack: 'b' },
+        { type: 'bar', label: 'Grab sales',       data: D.kj091_monthly.map(d => d.sales_grab), backgroundColor: 'rgba(45, 106, 79, 0.30)', borderRadius: 0, stack: 'b' },
+        { type: 'bar', label: 'Waste log',        data: D.kj091_monthly.map(d => d.waste),      backgroundColor: 'rgba(139, 41, 41, 0.85)', borderRadius: 0, stack: 'b' },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', align: 'start', labels: { boxWidth: 10, padding: 8, font: { size: 10 } } },
+        tooltip: { backgroundColor: '#0B1F3A' }
+      },
+      scales: {
+        y: { beginAtZero: true, ticks: { font: { size: 11 } }, grid: { color: '#EEF1F6' } },
+        x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+
+  // Table — Balance % = (sold+waste − replen) / replen
+  // positive = ขายมากกว่าส่ง (ดี/ดึง stock), negative = ส่งเกิน (แย่/ของเหลือ)
+  // Sep = flag "*" because replen file ramping up (started 22 Aug)
+  document.getElementById('kj091-tbody').innerHTML = D.kj091_monthly.map(d => {
+    const totalSold = d.sales_gay + d.sales_booth + (d.sales_grab || 0);
+    const accounted = totalSold + d.waste;
+    const balancePct = d.replen > 0 ? ((accounted - d.replen) / d.replen * 100) : 0;
+    const isSep = d.ym === '2025-09';
+    const sign = balancePct >= 0 ? '+' : '';
+    let cellText;
+    if (balancePct <= -30)      cellText = `<span style="color:var(--danger);font-weight:700;">${sign}${balancePct.toFixed(0)}%</span>`;
+    else if (balancePct < 0)    cellText = `<span style="color:var(--danger);">${sign}${balancePct.toFixed(0)}%</span>`;
+    else                        cellText = `<span style="color:var(--success);font-weight:700;">${sign}${balancePct.toFixed(0)}%</span>`;
+    const rowStyle = isSep ? 'color:var(--slate); font-style:italic;' : '';
+    const star = isSep ? '*' : '';
+    return `<tr style="${rowStyle}">
+      <td>${d.ym}${star}</td>
+      <td class="tbl-num">${F.num(d.replen)}</td>
+      <td class="tbl-num">${F.num(totalSold)}<span style="color:var(--slate);font-size:11px;"> (${F.num(d.sales_gay)}+${F.num(d.sales_booth)}+${F.num(d.sales_grab || 0)})</span></td>
+      <td class="tbl-num">${cellText}</td>
+    </tr>`;
+  }).join('');
+})();
+
+// Over-push (left) + Under-supply (right) — 2 side-by-side charts
+(function() {
+  const makeChart = (canvasId, items, color, axisLabel, sortDesc) => {
+    const sorted = [...items].sort((a, b) => sortDesc ? b.ratio - a.ratio : a.ratio - b.ratio);
+    new Chart(document.getElementById(canvasId).getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: sorted.map(d => `${d.ref} ${d.name.slice(0, 22)}`),
+        datasets: [{
+          label: 'Replen / Sales ratio',
+          data: sorted.map(d => d.ratio),
+          backgroundColor: color,
+          borderRadius: 6,
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#3D3744',
+            callbacks: {
+              label: (ctx) => {
+                const d = sorted[ctx.dataIndex];
+                return `Replen ${d.replen.toLocaleString()} / Sales ${d.sales.toLocaleString()} = ${d.ratio}x`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: { beginAtZero: true, ticks: { callback: v => v + 'x', font: { size: 11 } }, grid: { color: '#F0E6D8' }, title: { display: true, text: axisLabel, font: { size: 11 } } },
+          y: { grid: { display: false }, ticks: { font: { size: 11 } } }
+        }
+      }
+    });
+  };
+  const over  = D.overpush.filter(d => d.ratio >= 1);
+  const under = D.overpush.filter(d => d.ratio < 1);
+  makeChart('chart-over',  over,  T.peach, 'Replen ÷ Sales (≥1 = ส่งเกิน)', true);
+  makeChart('chart-under', under, T.mauve, 'Replen ÷ Sales (<1 = ขายเกิน)', false);
+})();
+
+// Flow diagram dropdown — 2 separate flows (Central / In-store), no balance computation
+(function() {
+  const sel = document.getElementById('flow-period');
+  if (!sel) return;
+  const apply = (key) => {
+    const m = D.flow_metrics[key];
+    if (!m) return;
+    document.querySelectorAll('[data-flow-stat]').forEach(el => {
+      const k = el.dataset.flowStat;
+      el.textContent = m[k] != null ? m[k].toLocaleString() : '-';
+    });
+  };
+  sel.addEventListener('change', e => apply(e.target.value));
+  apply(sel.value);
+})();
+</script>
+</body>
+</html>

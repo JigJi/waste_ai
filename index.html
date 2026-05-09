@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data · Koji Insight</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div id="nav-mount"></div>
+
+<main class="container">
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- 1. Lead-in                              -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-eyebrow">Data · Context & Setup</div>
+      <h1 class="section-title">ข้อมูลที่ Koji ส่งมา + ที่ verify แล้ว</h1>
+      <p class="section-subtitle">ทำเล · ลูกค้า · นาฬิกาประจำวัน · ข้อมูลที่มีในมือ — ก่อนพูดถึง AI ต้องเข้าใจ Koji ก่อน</p>
+    </div>
+
+    <div class="grid grid-4">
+      <div class="stat-card">
+        <div class="stat-label">บิลรวม</div>
+        <div class="stat-num">125,710</div>
+        <div class="stat-foot">13 เดือน · 373 วัน · 351,903 ชิ้น</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Net sales รวม</div>
+        <div class="stat-num">17.1<span class="stat-suffix">M ฿</span></div>
+        <div class="stat-foot">Gaysorn 4 booths รวม</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">SKUs in data</div>
+        <div class="stat-num">85</div>
+        <div class="stat-foot">93 active POS · 244 master</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Waste @ retail (8mo)</div>
+        <div class="stat-num">546<span class="stat-suffix">K ฿</span></div>
+        <div class="stat-foot">May–Dec 2025 · 6.48% of sales</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- 2. Location — Gaysorn Amarin           -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-eyebrow">📍 Location</div>
+      <h2 class="section-title">Gaysorn Amarin · มุมแยกราชประสงค์</h2>
+      <p class="section-subtitle">Office tower + retail mall ที่ renovate เสร็จ มี.ค. 2024 (งบ 1,000 ล้าน) · footfall 70,000-80,000/วัน · skywalk เชื่อม CentralWorld + Erawan + Big C + Gaysorn Village</p>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="card card-tinted-cream">
+        <div class="callout-eyebrow">🏢 ตึก profile</div>
+        <h3 style="font-size:16px; font-weight:600; margin:6px 0;">Mixed-use tower</h3>
+        <ul style="list-style:none; padding:0; font-size:13px; color:var(--charcoal);">
+          <li style="padding:4px 0; border-bottom:1px solid var(--line);">Podium 5 ชั้น retail · 17,600 ตร.ม.</li>
+          <li style="padding:4px 0; border-bottom:1px solid var(--line);">Amarin Tower 22 ชั้น · 30+ บริษัท · 5-10K พนักงาน</li>
+          <li style="padding:4px 0; border-bottom:1px solid var(--line);">BTS Chidlom 180 ม. · skybridge ตรง</li>
+          <li style="padding:4px 0;">Koji อยู่ <strong>ชั้น 4 food court</strong> · 7:00-19:00</li>
+        </ul>
+      </div>
+
+      <div class="card card-tinted-cream">
+        <div class="callout-eyebrow">⭐ Anchors หลัง renovate</div>
+        <h3 style="font-size:16px; font-weight:600; margin:6px 0;">Premium destination</h3>
+        <ul style="list-style:none; padding:0; font-size:13px; color:var(--charcoal);">
+          <li style="padding:4px 0; border-bottom:1px solid var(--line);"><strong>LV The Place</strong> flagship + LV Café</li>
+          <li style="padding:4px 0; border-bottom:1px solid var(--line);">LV × Gaggan</li>
+          <li style="padding:4px 0; border-bottom:1px solid var(--line);">McDonald's <strong>สาขาแรกของไทย</strong></li>
+          <li style="padding:4px 0;">Starbucks · Auntie Anne's · Fatboy Izakaya</li>
+        </ul>
+      </div>
+
+      <div class="card card-tinted-cream">
+        <div class="callout-eyebrow">👣 Daily traffic</div>
+        <h3 style="font-size:16px; font-weight:600; margin:6px 0;">CBD office + tourist transit</h3>
+        <ul style="list-style:none; padding:0; font-size:13px; color:var(--charcoal);">
+          <li style="padding:4px 0; border-bottom:1px solid var(--line);">Complex footfall <strong>70-80K/วัน</strong></li>
+          <li style="padding:4px 0; border-bottom:1px solid var(--line);">Tourist ~50% (จีน · ญี่ปุ่น · ตะวันออกกลาง)</li>
+          <li style="padding:4px 0; border-bottom:1px solid var(--line);">Hotel 5-ดาวข้าง ๆ: Grand Hyatt, Anantara, IC, Athenee</li>
+          <li style="padding:4px 0;">Profile: <strong>office + upper-mid Thai + tourist</strong></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- 3. Customer profile                     -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-eyebrow">👤 Customer</div>
+      <h2 class="section-title">ลูกค้า Koji = office grab-and-go (ยืนยันจาก POS)</h2>
+      <p class="section-subtitle">ไม่ใช่ tourist, ไม่ใช่ café-stay. PromptPay 80% + dwell 3-15 นาที + basket 150 บาท / 3 ชิ้น = office worker digital-savvy หิ้วกลับให้ทีม</p>
+    </div>
+
+    <div class="grid grid-4">
+      <div class="stat-card">
+        <div class="stat-label">Payment PromptPay (QR)</div>
+        <div class="stat-num">80<span class="stat-suffix">%</span></div>
+        <div class="stat-foot">cash 20% · บัตร/อื่น ๆ <0.01% · POS label เดิม "K Plus"</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Avg basket</div>
+        <div class="stat-num">150<span class="stat-suffix">฿</span></div>
+        <div class="stat-foot">3 ชิ้น · 1.64 line items</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Dwell time</div>
+        <div class="stat-num">3-15<span class="stat-suffix">min</span></div>
+        <div class="stat-foot">grab-and-go pure</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Customer DB</div>
+        <div class="stat-num">0.08<span class="stat-suffix">%</span></div>
+        <div class="stat-foot">มี name · 0.00% เบอร์ → no CRM</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- 4. Intraday clock                       -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-eyebrow">🕐 ช่วงเวลาขาย</div>
+      <h2 class="section-title">ช่วงเที่ยง 11-13:00 = 47% ของบิลทั้งวัน</h2>
+      <p class="section-subtitle">แต่ <strong>แต่ละ SKU ขายได้ดีคนละช่วง</strong> — Croissant / Honey Butter ขายดีตอนเช้า, Shio Pan ขายดีตอนบ่าย → ต้องผลิตคนละรอบ (ครัวกลางส่ง 2 รอบตรงกับนี้: 09:30 + 14:00)</p>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <h3 style="font-size:15px; font-weight:600; margin-bottom:12px;">Hourly transaction %</h3>
+        <div class="chart-wrap">
+          <canvas id="chart-hourly"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size:15px; font-weight:600; margin-bottom:12px;">Per-SKU clock (top 8)</h3>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>SKU</th>
+              <th class="tbl-num">8-11</th>
+              <th class="tbl-num">12-13</th>
+              <th class="tbl-num">14-17</th>
+              <th>Peak</th>
+            </tr>
+          </thead>
+          <tbody id="sku-clock-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- 5. Sales trend                          -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-eyebrow">📈 Time series</div>
+      <h2 class="section-title">Monthly net sales — Gaysorn Amarin (สาขาประจำ)</h2>
+      <p class="section-subtitle">Peak ส.ค. 2025 (1.32M) → ตกถึง 670K ม.ค. 2026 = <strong>−49.2%</strong> · macro shock stack อธิบายไว้หน้า Analytics. <em>หมายเหตุ:</em> ไม่รวม pop-up booth (3 ตัว, ขายในห้างอื่น — Emporium / Paragon / The Mall)</p>
+    </div>
+
+    <div class="card">
+      <div class="chart-wrap">
+        <canvas id="chart-sales"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- 7. Waste trend                          -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">Monthly waste @ retail value</h2>
+      <p class="section-subtitle">Waste % เพิ่มจาก 2.0% (พ.ค.) → 12.3% (ธ.ค.). <strong>Waste log สำหรับครัวร้าน (~45 SKUs) อาจ understated</strong> — ไม่มี production log เลย → verify capture rate ไม่ได้ (ดูหน้า Analytics)</p>
+    </div>
+
+    <div class="card">
+      <div class="chart-wrap">
+        <canvas id="chart-waste"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- 8. Top SKUs                             -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">Top 10 SKUs by volume</h2>
+      <p class="section-subtitle">
+        <span class="pill pill-sage">In-store</span> = อบในร้าน (no replen records · ครัวร้านคุม) ·
+        <span class="pill pill-rose">Central kitchen</span> = ส่งจาก WH ทุกวัน 09:30 + 14:00 (FG จากครัวกลาง · 52 SKUs)
+      </p>
+    </div>
+
+    <div class="card" style="padding:0; overflow:hidden;">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>SKU</th>
+            <th>Name</th>
+            <th>System</th>
+            <th class="tbl-num">Units</th>
+            <th class="tbl-num">Net sales</th>
+            <th class="tbl-num">Price/Cost</th>
+          </tr>
+        </thead>
+        <tbody id="top-skus-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- 9. Quick callouts                       -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="section">
+    <div class="grid grid-2">
+      <div class="card card-tinted-rose">
+        <div class="callout-eyebrow">🎯 Headline finding</div>
+        <h3 style="font-size:18px; font-weight:600; margin-bottom:8px; color:var(--charcoal);">Shio Pan Signature SKU เดียว = 27% ของ waste</h3>
+        <p style="color:var(--charcoal); font-size:14px;">kj117 ขาย 150,694 ลูก = 5.86M บาท = <strong>34% ของรายได้ Koji ทั้ง 4 จุดขาย</strong> (Gaysorn + booth × 3). Hero SKU ที่ครอง dataset</p>
+      </div>
+      <div class="card card-tinted-mauve">
+        <div class="callout-eyebrow">📊 Sweet spot for analysis</div>
+        <h3 style="font-size:18px; font-weight:600; margin-bottom:8px; color:var(--charcoal);">ต.ค.–ธ.ค. 2025 มีข้อมูลครบ 4 ชั้น</h3>
+        <p style="color:var(--charcoal); font-size:14px;">Sales + waste + traffic + replenishment overlap = window สำหรับ counterfactual proof. Sep replen file partial (เริ่ม 22 ส.ค.) · Jan waste log ยังว่าง → window analysis = Oct-Dec 3 เดือน</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- 9. File inventory (appendix)            -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-eyebrow">📁 Appendix · Data sources</div>
+      <h2 class="section-title">11 ไฟล์ที่ Koji ส่งมา</h2>
+      <p class="section-subtitle">Sales · Traffic · Waste · Replenishment · SKU master · DS Engineer Handoff doc มาด้วย — มี data flow + gaps + open questions</p>
+    </div>
+
+    <div class="card" style="padding:0; overflow:hidden;">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>Dataset</th>
+            <th>Records</th>
+            <th>Date range</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="files-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<div id="footer-mount"></div>
+
+<script src="data.js"></script>
+<script src="partials.js"></script>
+<script>
+renderNav('dashboard');
+renderFooter();
+
+const D = window.KOJI_DATA;
+const F = window.fmt;
+const T = window.THEME;
+
+Chart.defaults.font.family = 'Noto Sans Thai, Inter, sans-serif';
+Chart.defaults.color = '#6B6275';
+Chart.defaults.borderColor = '#F0E6D8';
+
+// File inventory table
+(function() {
+  const tbody = document.getElementById('files-tbody');
+  const statusPill = (s) => {
+    const map = {
+      ready:   '<span class="pill pill-sage">🟢 Ready</span>',
+      partial: '<span class="pill pill-mauve">🟡 Partial</span>',
+      ref:     '<span class="pill pill-cream">📄 Reference</span>',
+    };
+    return map[s] || s;
+  };
+  tbody.innerHTML = D.files.map(f => `
+    <tr>
+      <td><strong>${f.label}</strong><br><span style="font-size:12px;color:var(--charcoal-soft)">${f.name}</span></td>
+      <td class="tbl-num">${f.records.toLocaleString()}</td>
+      <td>${f.date_range}</td>
+      <td>${statusPill(f.status)}</td>
+    </tr>
+  `).join('');
+})();
+
+// Top SKUs table
+(function() {
+  const tbody = document.getElementById('top-skus-tbody');
+  const sysPill = (s) => s === 'in_store'
+    ? '<span class="pill pill-sage">In-store</span>'
+    : '<span class="pill pill-rose">Central kitchen</span>';
+  tbody.innerHTML = D.top_skus.map(s => `
+    <tr>
+      <td><strong>${s.rank}</strong></td>
+      <td><code style="font-size:12px;color:var(--charcoal-soft)">${s.ref}</code></td>
+      <td>${s.name}</td>
+      <td>${sysPill(s.system)}</td>
+      <td class="tbl-num">${F.num(s.units)}</td>
+      <td class="tbl-num">${F.thbShort(s.sales)}</td>
+      <td class="tbl-num">฿${s.price} / ฿${s.cost}</td>
+    </tr>
+  `).join('');
+})();
+
+// Hourly chart
+(function() {
+  const ctx = document.getElementById('chart-hourly').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: D.hourly.map(d => d.hr + ':00'),
+      datasets: [{
+        label: '% of tx',
+        data: D.hourly.map(d => d.pct),
+        backgroundColor: D.hourly.map(d => d.pct > 12 ? T.rose : d.pct > 6 ? T.mauve : T.peach),
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { backgroundColor: '#3D3744', callbacks: { label: ctx => ctx.raw + '%' } }
+      },
+      scales: {
+        y: { beginAtZero: true, ticks: { callback: v => v + '%', font: { size: 11 } }, grid: { color: '#F0E6D8' } },
+        x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+})();
+
+// SKU clock table
+(function() {
+  const peakColor = (peak) => {
+    return peak === 'morning' ? '<span class="pill pill-peach">เช้า</span>' :
+           peak === 'lunch' ? '<span class="pill pill-mauve">เที่ยง</span>' :
+           '<span class="pill pill-rose">บ่าย</span>';
+  };
+  document.getElementById('sku-clock-tbody').innerHTML = D.sku_clock.map(s => `
+    <tr>
+      <td style="font-size:12px;">${s.sku}</td>
+      <td class="tbl-num" style="${s.peak==='morning' ? 'color:#C26B5C;font-weight:700;' : ''}">${s.morning}%</td>
+      <td class="tbl-num" style="${s.peak==='lunch' ? 'color:#8A6BA0;font-weight:700;' : ''}">${s.lunch}%</td>
+      <td class="tbl-num" style="${s.peak==='afternoon' ? 'color:#D89AA3;font-weight:700;' : ''}">${s.afternoon}%</td>
+      <td>${peakColor(s.peak)}</td>
+    </tr>
+  `).join('');
+})();
+
+// Sales chart
+(function() {
+  const ctx = document.getElementById('chart-sales').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: D.monthly_sales.map(d => d.ym),
+      datasets: [{
+        label: 'Net sales (฿)',
+        data: D.monthly_sales.map(d => d.net_sales),
+        backgroundColor: D.monthly_sales.map((d, i) => {
+          const max = Math.max(...D.monthly_sales.map(x => x.net_sales));
+          if (d.net_sales > max * 0.85) return T.rose;
+          if (d.net_sales < max * 0.55) return T.peach;
+          return T.mauve;
+        }),
+        borderRadius: 8,
+        borderWidth: 0,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { backgroundColor: '#3D3744', titleFont: { weight: 600 }, callbacks: { label: ctx => `Net sales: ${F.thbShort(ctx.raw)} ฿` } }
+      },
+      scales: {
+        y: { beginAtZero: true, ticks: { callback: v => F.thbShort(v), font: { size: 11 } }, grid: { color: '#F0E6D8' } },
+        x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+})();
+
+// Waste chart
+(function() {
+  const ctx = document.getElementById('chart-waste').getContext('2d');
+  new Chart(ctx, {
+    data: {
+      labels: D.monthly_waste.map(d => d.ym),
+      datasets: [
+        { type: 'bar', label: 'Waste value (฿)', data: D.monthly_waste.map(d => d.value), backgroundColor: T.peach, borderRadius: 8, yAxisID: 'y' },
+        { type: 'line', label: 'Waste %', data: D.monthly_waste.map(d => d.pct), borderColor: T.charcoal, backgroundColor: T.charcoal, tension: 0.3, pointRadius: 5, pointBackgroundColor: T.rose, pointBorderColor: T.charcoal, pointBorderWidth: 2, yAxisID: 'y2' }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', align: 'end', labels: { boxWidth: 12, font: { size: 12 } } }, tooltip: { backgroundColor: '#3D3744' } },
+      scales: {
+        y: { beginAtZero: true, position: 'left', ticks: { callback: v => F.thbShort(v) + '฿', font: { size: 11 } }, grid: { color: '#F0E6D8' } },
+        y2: { beginAtZero: true, position: 'right', max: 14, ticks: { callback: v => v + '%', font: { size: 11 } }, grid: { display: false } },
+        x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+})();
+</script>
+</body>
+</html>
