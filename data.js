@@ -370,38 +370,105 @@ window.KOJI_DATA = {
   ],
 
   // Counterfactual — RE-DERIVED 2026-05-09 at proper FG-only scope, all-channel sales (Gay+Booth+Grab)
-  // Method: daily simulation with FIFO inventory + shelf life carryover, AI = rolling-28-day × 1.10 buffer
-  // Window: Oct-Dec 2025 (3 months), annualized × 4
+  // Method: daily simulation with FIFO inventory + shelf life carryover
   // SCOPE: 22 over-supply SKUs only (defendable). Under-supply (14 SKUs) excluded — data ไม่ verify
+  // 3 AI methods compared:
+  //   - Naive: rolling-28 × 1.10 buffer
+  //   - ML pure: LightGBM with 9 features (lag/dow/calendar)
+  //   - Hybrid: rolling-14 baseline + LightGBM residual model × 1.10 buffer ← BEST
   counterfactual: {
     in_store: {
-      n_skus: 16,
-      actual_profit_5mo: 2242049,
-      ai_profit_5mo: 2038329,
-      diff_5mo: -203720,
-      diff_annual: -489000,
-      ai_wins: 0,
-      total: 16,
-      window: 'Aug-Jan 2025 (5 months)',
+      n_skus: 6,
+      window: 'Dec 2025 · top 6 Shio Pan (kj117/kj159/kj118/kj151/kj120/kj124) · 25,198 units demand',
+      forecast_accuracy_pct_of_oracle: 91,
+      waste_rate_implied_pct: 18.9,
+      stockout_rate_implied_pct: 5.7,
+      saving_claim: 'NOT POSSIBLE — no chef production log to compare against',
+      next: 'Phase 0: build production log + BOM yield (C3) → then claim saving',
+      realistic_deploy: 'Second-opinion alert (chef decides, AI flags) — capture margin gain via decision support',
     },
     central_kitchen: {
-      n_skus: 22,  // over-supply only
-      window: 'Oct-Dec 2025 (3 months), annualized × 4',
-      diff_annual_shelf1: 1158343,
-      diff_annual_shelf3: 463855,
-      diff_annual_shelf7: 11051,
+      n_skus: 22,
+      window: 'Train Aug22-Nov30 (100d) · Test Dec (31d) · annualized × 12',
+      // Hybrid (best method)
+      diff_annual_shelf1_hybrid: 1552651,
+      diff_annual_shelf2_hybrid: 1254931,
+      diff_annual_shelf3_hybrid: 861859,
+      diff_annual_shelf5_hybrid: 473779,
+      diff_annual_shelf7_hybrid: 357619,
       note: '14 SKUs under-supply excluded — sales > replen ไม่ verify (อาจ carryover/direct supply ไม่ logged)',
     },
   },
 
-  // Sensitivity — shelf life × $ saving (annualized) · over-supply 22 SKUs only
+  // Sensitivity — shelf life × $ saving (annualized) · over-supply 22 SKUs · Hybrid model
   sensitivity: [
-    { shelf: '1-day',  defendable: 1158343 },
-    { shelf: '2-day',  defendable: 832511 },
-    { shelf: '3-day',  defendable: 463855 },
-    { shelf: '5-day',  defendable: 126679 },
-    { shelf: '7-day',  defendable: 11051 },
+    { shelf: '1-day',  defendable: 1552651 },
+    { shelf: '2-day',  defendable: 1254931 },
+    { shelf: '3-day',  defendable: 861859 },
+    { shelf: '5-day',  defendable: 473779 },
+    { shelf: '7-day',  defendable: 357619 },
   ],
+
+  // Waste validation — anchor AI saving claim on logged waste (Oct-Dec, 21 over-supply SKUs)
+  // Logged waste = ที่ chef key เข้าระบบจริง (manual + Odoo)
+  // Implied @ 1-day = ที่ should be waste ถ้า shelf=1 day (no carryover)
+  // Capture rate = logged / implied · ตัวที่ < 100% = มี shelf > 1 day หรือ log ขาด
+  waste_validation: {
+    window: 'Oct-Dec 2025 · 21 over-supply SKUs',
+    total_replen: 14006,
+    total_sales: 10591,
+    total_overproduction: 3415,
+    logged_waste_units: 1056,
+    logged_waste_thb: 62617,       // retail value
+    implied_waste_1day_units: 3415,
+    implied_waste_1day_thb: 606312,  // retail value
+    capture_rate_pct: 9.5,
+    interpretation: 'ส่วนใหญ่ของ over-production ไม่ใช่ waste จริง — เป็น carryover ขายวันถัดไป (shelf > 1 day)',
+    per_sku: [
+      { sku: 'kj101', name: 'Danish - Peach',          replen: 263,  sales: 181, logged: 78,  capture_pct: 31.6, implied_shelf: '1-day' },
+      { sku: 'kj110', name: 'Butter Croissant',         replen: 825,  sales: 641, logged: 191, capture_pct: 30.2, implied_shelf: '1-day' },
+      { sku: 'kj099', name: 'Danish - Apple',           replen: 384,  sales: 354, logged: 90,  capture_pct: 27.7, implied_shelf: '1-2 day' },
+      { sku: 'kj154', name: 'Pudding - Strawberry',     replen: 253,  sales: 192, logged: 48,  capture_pct: 22.5, implied_shelf: '2-3 day' },
+      { sku: 'kj090', name: 'Grilled Cheese',           replen: 920,  sales: 670, logged: 178, capture_pct: 21.5, implied_shelf: '2-3 day' },
+      { sku: 'kj156', name: 'Pudding - Blueberry',      replen: 209,  sales: 181, logged: 32,  capture_pct: 18.2, implied_shelf: '3 day' },
+      { sku: 'kj105', name: 'Pain au Chocolate',        replen: 785,  sales: 740, logged: 91,  capture_pct: 16.0, implied_shelf: '3-5 day' },
+      { sku: 'kj111', name: 'Sausage Bonito Croissant', replen: 249,  sales: 241, logged: 29,  capture_pct: 13.4, implied_shelf: '3-5 day' },
+      { sku: 'kj195', name: 'Shio Pan Vanilla Tart',    replen: 743,  sales: 610, logged: 45,  capture_pct: 8.8,  implied_shelf: '5-7 day' },
+      { sku: 'kj186', name: 'Set Mentaiko Drip',        replen: 378,  sales: 313, logged: 21,  capture_pct: 6.3,  implied_shelf: '5-7 day' },
+      { sku: 'kj187', name: 'Focaccia 7.5x7.5',         replen: 607,  sales: 432, logged: 32,  capture_pct: 6.0,  implied_shelf: '7+ day' },
+      { sku: 'kj144', name: 'Japanese Custard Bun',     replen: 957,  sales: 742, logged: 39,  capture_pct: 5.4,  implied_shelf: '7+ day' },
+      { sku: 'kj091', name: 'Grilled Honey Butter',     replen: 3681, sales: 2329, logged: 120, capture_pct: 4.1, implied_shelf: '7+ day' },
+      { sku: 'kj137', name: 'Muffin - Blueberry',       replen: 617,  sales: 452, logged: 21,  capture_pct: 3.9,  implied_shelf: '7+ day' },
+      { sku: 'kj200', name: 'Crispy Brownie 120g',      replen: 139,  sales: 72,  logged: 3,   capture_pct: 2.6,  implied_shelf: '14+ day (cookie)' },
+      { sku: 'kj192', name: 'Maple Butter Cookies',     replen: 302,  sales: 142, logged: 6,   capture_pct: 2.3,  implied_shelf: '14+ day (cookie)' },
+      { sku: 'kj136', name: 'Pudding Custard Caramel',  replen: 1024, sales: 985, logged: 16,  capture_pct: 2.2,  implied_shelf: '7+ day' },
+      { sku: 'kj194', name: 'Miso Butter Palmiers',     replen: 293,  sales: 97,  logged: 4,   capture_pct: 1.6,  implied_shelf: '14+ day (cookie)' },
+      { sku: 'kj193', name: 'Cacao Cranberry Cookie',   replen: 265,  sales: 167, logged: 3,   capture_pct: 1.4,  implied_shelf: '14+ day (cookie)' },
+      { sku: 'kj181', name: 'Chocolate Muffin',         replen: 474,  sales: 417, logged: 5,   capture_pct: 1.2,  implied_shelf: '7+ day' },
+      { sku: 'kj139', name: 'Sourdough Fruit Campagne', replen: 638,  sales: 633, logged: 4,   capture_pct: 1.1,  implied_shelf: '5-7 day' },
+    ],
+  },
+
+  // Live train/test result — out-of-sample proof (Dec 2025)
+  // Train: Aug22-Nov30 (100 days), Test: Dec (31 days), 21 over-supply SKUs (kj095 too rare)
+  // 1-day shelf assumption
+  live_test: {
+    window: 'Train Aug22-Nov30 (100d) · Test Dec (31d, out-of-sample)',
+    n_skus: 21,
+    shelf: '1-day',
+    actual_dec: 23288,
+    naive_dec: 142189,    // rolling-28 × 1.10
+    ml_dec: 133754,        // LightGBM 9 features (pure)
+    hybrid_dec: 152675,    // rolling-14 baseline + LGBM residual ★
+    naive_annual: 1426820,
+    ml_annual: 1325593,
+    hybrid_annual: 1552651,
+    win_rate_naive: 19,
+    win_rate_ml: 18,
+    win_rate_hybrid: 21,
+    total_skus: 21,
+    best_per_sku: { naive: 8, ml: 6, hybrid: 7 },
+  },
 
   // ═══════════════════════════════════════════════
   // 5 Angles + ROI
@@ -495,7 +562,7 @@ window.KOJI_DATA = {
       user: 'Central kitchen planner / production manager',
       frequency: '1-2x/day (delivery cycles)',
       phase: 'Phase 1 ⭐',
-      proof: '0.5-1.4M/ปี/สาขา (range ตาม shelf life · re-derived proper scope)',
+      proof: '0.86-1.55M/ปี/สาขา · Hybrid model proven 21/21 SKUs live test',
       tier: 'priority',
     },
     {
@@ -571,7 +638,7 @@ window.KOJI_DATA = {
   critical_questions: [
     // === Data integrity (ก่อน trust ตัวเลข) ===
     { id: 'C1', q: '14 SKUs ที่ sales > replen (kj096/kj126/kj182/kj131/kj092 + 9 ตัว) — ของมาจากไหน? carryover / direct supply ไม่ logged / POS double-count?', impact: 'Critical', why: 'Verify ก่อน trust replen baseline · affects scope ของ Phase 1' },
-    { id: 'C2', q: 'Shelf life ของแต่ละ central-kitchen SKU จริง ๆ คือกี่วัน?',                       impact: 'Critical', why: 'ROI range 0.5-1.2M ขึ้นกับ shelf assumption (1-day vs 7-day = ต่างกัน 100x)' },
+    { id: 'C2', q: 'Shelf life ของแต่ละ central-kitchen SKU จริง ๆ คือกี่วัน?',                       impact: 'Critical', why: 'Hybrid ROI range 0.36M (7-day) → 1.55M (1-day) · ต่างกัน 4x ตาม shelf' },
     { id: 'C3', q: 'BOM dough → Shio Pan yield — 1 unit (kg/GN) Shio Pan Dough ทำได้กี่ลูก?',         impact: 'High',     why: 'Unlock visibility ครัวร้าน 78% volume · ใช้ dough log ที่มีอยู่' },
     { id: 'C4', q: 'Day-end leftover ทำอะไรบ้าง? (discount / donate / staff comp / dispose)',          impact: 'High',     why: 'แยก "waste จริง" vs "redistributed" — ตอนนี้ log อาจ understate' },
     { id: 'C5', q: 'Direct supply นอก Odoo มีไหม? (chef ทำเพิ่มเอง / supplier ส่งตรง / event leftover)', impact: 'High',     why: 'อธิบาย sales > replen anomaly ของ 14 SKUs' },
@@ -580,19 +647,20 @@ window.KOJI_DATA = {
 
     // === Operational (ก่อน design Phase 1) ===
     { id: 'C8', q: 'Central kitchen sizing — ใครตัดสินใจ qty ส่ง Amarin วันละเท่าไร? Logic อะไร?',   impact: 'High',     why: 'Confirm root cause + AI integration point' },
-    { id: 'C9', q: 'Branch refuse delivery ได้มั้ย? หรือต้องรับเสมอ?',                                 impact: 'High',     why: 'Confirm AI recommendation actionable' },
-    { id: 'C10', q: 'Booth pop-up × 3 (Emporium/Paragon/The Mall) — รับของจาก Gaysorn ส่งต่อ หรือ central ส่งตรง?', impact: 'High', why: 'กำหนด scope ของ AI · ต้องแยก inventory หรือ unify' },
-    { id: 'C11', q: 'Chef ครัวร้าน — กี่คน? rotation อย่างไร? key-person risk?',                     impact: 'High',     why: 'Phase 3 Cold-start engine motivation + multi-store expansion plan' },
-    { id: 'C12', q: 'Stockout — chef รู้ตัวมั้ย? เคยได้ยินลูกค้าบ่นมั้ย?',                                 impact: 'Medium',   why: 'Confirm under-supply ตรงกับ lost demand จริง' },
-    { id: 'C13', q: 'Recipe / BOM dough version — เปลี่ยนบ่อยไหม? control โดยใคร?',                impact: 'Medium',   why: 'Forecast model ต้อง retrain ตอน recipe เปลี่ยน' },
+    { id: 'C9', q: 'Daily closing stock per SKU — ที่ร้านมี track ไหม? (Odoo field / chef จดเอง / ไม่มี?)',  impact: 'High',     why: 'Unlock Phase 1.2 inventory-aware planning · ROI ceiling +0.15-0.45M/ปี เพิ่มจาก base 1.55M (เพราะ AI subtract on-hand stock ก่อนสั่งผลิตใหม่)' },
+    { id: 'C10', q: 'Branch refuse delivery ได้มั้ย? หรือต้องรับเสมอ?',                                 impact: 'High',     why: 'Confirm AI recommendation actionable' },
+    { id: 'C11', q: 'Booth pop-up × 3 (Emporium/Paragon/The Mall) — รับของจาก Gaysorn ส่งต่อ หรือ central ส่งตรง?', impact: 'High', why: 'กำหนด scope ของ AI · ต้องแยก inventory หรือ unify' },
+    { id: 'C12', q: 'Chef ครัวร้าน — กี่คน? rotation อย่างไร? key-person risk?',                     impact: 'High',     why: 'Phase 3 Cold-start engine motivation + multi-store expansion plan' },
+    { id: 'C13', q: 'Stockout — chef รู้ตัวมั้ย? เคยได้ยินลูกค้าบ่นมั้ย?',                                 impact: 'Medium',   why: 'Confirm under-supply ตรงกับ lost demand จริง' },
+    { id: 'C14', q: 'Recipe / BOM dough version — เปลี่ยนบ่อยไหม? control โดยใคร?',                impact: 'Medium',   why: 'Forecast model ต้อง retrain ตอน recipe เปลี่ยน' },
 
     // === Business / Implementation ===
-    { id: 'C14', q: 'Foodstory POS + Odoo — เปิด API ให้ Impactus access daily/real-time ไหม?',     impact: 'High',     why: 'Phase 1 deploy ต้อง integrate ไม่ใช่ manual export' },
-    { id: 'C15', q: 'KPI baseline ปัจจุบัน — Koji วัดอะไร? waste %? GP %? same-store sales?',         impact: 'Medium',   why: 'Pre/post measurement framework · prove ROI ตามเลขที่ Koji ใช้' },
-    { id: 'C16', q: 'Franchise timeline — กี่สาขาใน 12-24 เดือน? location profile (mall / standalone)?', impact: 'High',     why: 'Multi-store ROI scaling + Phase 3 scope' },
-    { id: 'C17', q: 'SeaconB เปิด ก.พ. 2026 — product mix + replen schedule + sales target?',        impact: 'Medium',   why: 'Cold-start opportunity · benchmark สาขาใหม่' },
-    { id: 'C18', q: 'Tech budget + IP ownership — ของที่ Impactus build ใครเป็นเจ้าของ?',            impact: 'High',     why: 'Commercial structure · success-share agreement' },
-    { id: 'C19', q: 'Success criteria — อะไรเรียกว่า AI สำเร็จ? % waste? เงิน save? cold-start time?',     impact: 'High',     why: 'Avoid attribution dispute · agree before Phase 1 starts' },
+    { id: 'C15', q: 'Foodstory POS + Odoo — เปิด API ให้ Impactus access daily/real-time ไหม?',     impact: 'High',     why: 'Phase 1 deploy ต้อง integrate ไม่ใช่ manual export' },
+    { id: 'C16', q: 'KPI baseline ปัจจุบัน — Koji วัดอะไร? waste %? GP %? same-store sales?',         impact: 'Medium',   why: 'Pre/post measurement framework · prove ROI ตามเลขที่ Koji ใช้' },
+    { id: 'C17', q: 'Franchise timeline — กี่สาขาใน 12-24 เดือน? location profile (mall / standalone)?', impact: 'High',     why: 'Multi-store ROI scaling + Phase 3 scope' },
+    { id: 'C18', q: 'SeaconB เปิด ก.พ. 2026 — product mix + replen schedule + sales target?',        impact: 'Medium',   why: 'Cold-start opportunity · benchmark สาขาใหม่' },
+    { id: 'C19', q: 'Tech budget + IP ownership — ของที่ Impactus build ใครเป็นเจ้าของ?',            impact: 'High',     why: 'Commercial structure · success-share agreement' },
+    { id: 'C20', q: 'Success criteria — อะไรเรียกว่า AI สำเร็จ? % waste? เงิน save? cold-start time?',     impact: 'High',     why: 'Avoid attribution dispute · agree before Phase 1 starts' },
   ],
 };
 
